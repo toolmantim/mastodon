@@ -3,6 +3,11 @@
 class NotifyService < BaseService
   include Redisable
 
+  NON_EMAIL_TYPES = %i(
+    admin.report
+    admin.sign_up
+  ).freeze
+
   def call(recipient, type, activity)
     @recipient    = recipient
     @activity     = activity
@@ -35,11 +40,11 @@ class NotifyService < BaseService
   end
 
   def optional_non_follower?
-    @recipient.user.settings.interactions['must_be_follower']  && !@notification.from_account.following?(@recipient)
+    @recipient.user.settings['interactions.must_be_follower']  && !@notification.from_account.following?(@recipient)
   end
 
   def optional_non_following?
-    @recipient.user.settings.interactions['must_be_following'] && !following_sender?
+    @recipient.user.settings['interactions.must_be_following'] && !following_sender?
   end
 
   def message?
@@ -81,7 +86,7 @@ class NotifyService < BaseService
 
   def optional_non_following_and_direct?
     direct_message? &&
-      @recipient.user.settings.interactions['must_be_following_dm'] &&
+      @recipient.user.settings['interactions.must_be_following_dm'] &&
       !following_sender? &&
       !response_to_recipient?
   end
@@ -170,6 +175,6 @@ class NotifyService < BaseService
   end
 
   def send_email_for_notification_type?
-    @recipient.user.settings.notification_emails[@notification.type.to_s]
+    NON_EMAIL_TYPES.exclude?(@notification.type) && @recipient.user.settings["notification_emails.#{@notification.type}"]
   end
 end
