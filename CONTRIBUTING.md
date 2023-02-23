@@ -41,7 +41,7 @@ It is not always possible to phrase every change in such a manner, but it is des
 - Code style rules (rubocop, eslint)
 - Normalization of locale files (i18n-tasks)
 
-**Note**: You may need to log in and authorise the GitHub account your fork of this repository belongs to with CircleCI to enable some of the automated checks to run.
+**Note**: Before creating your pull request, you need to ensure you’ve created a CircleCI account and configured your GitHub fork to automatically build, otherwise some of the automated checks will not run.
 
 ## Documentation
 
